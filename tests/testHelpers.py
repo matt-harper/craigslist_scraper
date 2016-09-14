@@ -1,5 +1,5 @@
 import identify, cl_post
-TEST_FILE = 'testData.txt'
+TEST_FILE = 'tests/testData.txt'
 
 def loadTestData(filename):
 	lines = []
