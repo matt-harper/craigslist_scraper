@@ -1,16 +1,12 @@
 from lxml import html, etree
-import requests, random, cl_post
-
-base_url = 'https://dallas.craigslist.org'
-music_url = base_url + '/search/msa'
-agents_path = 'data/agents.txt'
+import requests, random, cl_post, settings
 
 class Scraper():
 	def __init__(self):
 		self.loadUserAgents()
 
 	def downloadPage(self, pageNumber=0):
-		url = music_url
+		url = settings.MUSIC_URL
 		if pageNumber > 0:
 			url += '?s=' + str(int(100 * pageNumber))
 		return Page(requests.get(url, headers=self.generateHeaders()))
@@ -24,7 +20,7 @@ class Scraper():
 
 	def loadUserAgents(self):
 		self.agents = []
-		with open(agents_path) as f:
+		with open(settings.AGENTS_PATH) as f:
 			for agent in f:
 				agent.rstrip()
 				self.agents.append(agent)
@@ -70,7 +66,7 @@ class Page():
 			
 	def getUrl(self, row):
 		urlExtension = row.find_class("hdrlnk")[0].get('href')
-		return base_url + urlExtension
+		return settings.CL_BASE_URL + urlExtension
 
 	def getTitle(self, row):
 		return row.find_class("hdrlnk")[0].text

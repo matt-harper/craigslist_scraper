@@ -4,10 +4,6 @@ import cfg, re, types, settings
 
 class Identifier:
 	def __init__(self):
-		#self.models = cfg.CFG("models.cfg")
-#		self.brands = cfg.CFG("brands.cfg")
-#		self.series = cfg.CFG("series.cfg")
-
 		self.models = cfg.CFG(settings.MODEL_CFG)
 		self.brands = cfg.CFG(settings.BRAND_CFG)
 		self.series = cfg.CFG(settings.SERIES_CFG)
@@ -300,7 +296,7 @@ class Identity:
 
 class MasterCFG:
 	def __init__(self):
-		self.filepath = "./cfg/"
+		self.filepath = settings.CFG_PATH
 		self.loadedBrands = {}
 
 	def enumerateFiles(self):
@@ -379,12 +375,4 @@ def debug(*message):
 			string += str(m) + ' '
 		print string.rstrip()
 
-#mc = MasterCFG()
-#for f in mc.enumerateFiles():
-#	if not 'fender' in f.lower():
-#		continue
-#	print "Loading", f
-#	cfg = cfg.CFG(f)
-#	print cfg.keywords
-#	print cfg.badwords
-#	print cfg.requiredwords	
+

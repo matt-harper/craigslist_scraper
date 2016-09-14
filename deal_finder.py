@@ -1,9 +1,9 @@
-import cl_post
+import cl_post, settings
 
 class DealFinder():
 	def __init__(self):
-		self.badwordsPath = 'data/badwords.txt'
-		self.keywordsPath = 'data/keywords.txt'
+		self.badwordsPath = settings.BADWORD_PATH
+		self.keywordsPath = settings.KEYWORD_PATH
 		self.loadKeywords()
 		self.loadBadwords()
 
