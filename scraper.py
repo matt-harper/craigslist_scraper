@@ -3,6 +3,7 @@ import requests, random, cl_post
 
 base_url = 'https://dallas.craigslist.org'
 music_url = base_url + '/search/msa'
+agents_path = 'data/agents.txt'
 
 class Scraper():
 	def __init__(self):
@@ -23,7 +24,7 @@ class Scraper():
 
 	def loadUserAgents(self):
 		self.agents = []
-		with open('agents.txt') as f:
+		with open(agents_path) as f:
 			for agent in f:
 				agent.rstrip()
 				self.agents.append(agent)

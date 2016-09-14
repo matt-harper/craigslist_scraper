@@ -2,6 +2,8 @@ import cl_post
 
 class DealFinder():
 	def __init__(self):
+		self.badwordsPath = 'data/badwords.txt'
+		self.keywordsPath = 'data/keywords.txt'
 		self.loadKeywords()
 		self.loadBadwords()
 
@@ -25,7 +27,7 @@ class DealFinder():
 
 	def loadKeywords(self):
 		self.keywords = []
-		with open('keywords.txt') as f:
+		with open(self.keywordsPath) as f:
 			for line in f:
 				line = line.rstrip()
 				if (line == ''):
@@ -34,7 +36,7 @@ class DealFinder():
 
 	def loadBadwords(self):
 		self.badwords = []
-		with open('badwords.txt') as f:
+		with open(self.badwordsPath) as f:
 			for line in f:
 				#line = line.rstrip()
 				line = line.replace("\n", "")
