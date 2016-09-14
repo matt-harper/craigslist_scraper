@@ -4,9 +4,13 @@ import cfg, re, types, settings
 
 class Identifier:
 	def __init__(self):
-		self.models = cfg.CFG("models.cfg")
-		self.brands = cfg.CFG("brands.cfg")
-		self.series = cfg.CFG("series.cfg")
+		#self.models = cfg.CFG("models.cfg")
+#		self.brands = cfg.CFG("brands.cfg")
+#		self.series = cfg.CFG("series.cfg")
+
+		self.models = cfg.CFG(settings.MODEL_CFG)
+		self.brands = cfg.CFG(settings.BRAND_CFG)
+		self.series = cfg.CFG(settings.SERIES_CFG)
 
 		self.mc = MasterCFG()
 
