@@ -1,6 +1,6 @@
 from os import listdir
 from os.path import isfile, join
-import cfg, re, types, settings
+import cfg, settings
 
 class Identifier:
 	def __init__(self):
@@ -74,7 +74,7 @@ class Identifier:
 	def getPotentialSeries(self, clItem):
 		seriesList = []
 
-		# Loop over each potential series 
+		# Loop over each potential series
 		for series in self.series.keywords:
 			# Ensure all required words are present
 			requirementsMet = True
@@ -90,7 +90,7 @@ class Identifier:
 				if keyword in clItem.name:
 					if not hasBadword(self.series.getBadwords(series), clItem.name):
 						seriesList.append(series)
-		return seriesList 
+		return seriesList
 
 	def isAmp(self, clItem):
 		ampKeys = ['guitar amp', 'combo amp']
@@ -153,7 +153,7 @@ class Identity:
 		possibleIDs = []
 
 		debug("Interpretting the following data:\n\t" + str(self.brands.keys()) + "\n\t" + str(self.models.keys()) + "\n\t" + str(self.series.keys()))
-		
+
 		for brand in self.brands.keys():
 			for model in self.models.keys():
 				for series in self.series.keys():
@@ -170,7 +170,7 @@ class Identity:
 						possibleIDs.append((brand, model, ""))
 					else:
 						debug(brand, model, "does not exist")
-					
+
 		if len(possibleIDs) == 1:
 			(brand, model, series) = possibleIDs[0]
 			return (brand + " " + model + " " + series).rstrip()
@@ -271,12 +271,12 @@ class MasterCFG:
 		for m in models:
 			if m[0] == '!':
 				if m[1:] == model and series in self.loadedBrands[brand].keywords[m]:
-					return True					
+					return True
 			else:
 				if m == model and series in self.loadedBrands[brand].keywords[model]:
 					return True
 
-		return False					
+		return False
 
 	def exists_bm(self, brand, model):
 		debug("Checking for", brand, model)
@@ -291,7 +291,7 @@ class MasterCFG:
 				return True
 
 		return False
-		
+
 	def requiresSeries(self, brand, model):
 		self.loadBrand(brand)
 
@@ -303,7 +303,7 @@ class MasterCFG:
 
 		return True
 
- 	def loadBrand(self, brand):
+	def loadBrand(self, brand):
 		# Don't need to do anything if file has already been loaded
 		if brand in self.loadedBrands.keys():
 			return

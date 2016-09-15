@@ -1,9 +1,10 @@
-from lxml import html, etree
+from lxml import html
 import requests, random, cl_post, settings
 
 class Scraper():
 	def __init__(self):
 		self.loadUserAgents()
+		self.agents = []
 
 	def downloadPage(self, pageNumber=0):
 		url = settings.MUSIC_URL
@@ -19,7 +20,6 @@ class Scraper():
 		return header
 
 	def loadUserAgents(self):
-		self.agents = []
 		with open(settings.AGENTS_PATH) as f:
 			for agent in f:
 				agent.rstrip()
@@ -60,10 +60,9 @@ class Page():
 			except Exception as e:
 				print e
 				continue
-		
+
 		return itemsForSale
-			
-			
+
 	def getUrl(self, row):
 		urlExtension = row.find_class("hdrlnk")[0].get('href')
 		return settings.CL_BASE_URL + urlExtension
@@ -75,7 +74,7 @@ class Page():
 	def getPrice(self, row):
 		try:
 			price = row.find_class('price')[0].text
-			return price.replace('$','')
+			return price.replace('$', '')
 		except:
 			return 'N/A'
 
@@ -93,7 +92,7 @@ class Page():
 				ext = '_300x300.jpg'
 				imgs.append(domain + url + ext)
 
-			return imgs			
+			return imgs
 		except:
 			print "Error scraping image URLs"
 			exit(0)
@@ -103,7 +102,7 @@ class Page():
 		return self.tree.find_class('rows')[0]
 
 	def getDescription(self):
-		text = '' 
+		text = ''
 		for line in self.tree.get_element_by_id('postingbody').itertext():
 			line = line.rstrip().lstrip() + '\n'
 			if 'show contact info' not in line and line != '\n':
