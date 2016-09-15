@@ -190,47 +190,6 @@ class Identity:
 		else:
 			return ""
 
-	def old_interpret(self):
-		brand = self.interpretBrand()
-		model = self.interpretModel()
-		series = self.interpretSeries()
-
-		
-		if type(brand) is types.ListType:
-			# Choose between brands
-			if 'tele' in model.lower() or 'strat' in model.lower():
-				if 'squier' in [x.lower() for x in brand]:
-					brand = 'Squier'
-				if 'fender' in [x.lower() for x in brand]:
-					brand = 'Fender'
-				#TODO No logic behind choosing [0] here
-				brand = brand[0]
-			else:
-				brand = brand[0]
-		elif brand == "":
-			# Choose brand based on model/series
-			if series.lower() == 'mia' or series.lower() == 'mim':
-				if 'tele' in model.lower() or 'strat' in model.lower():
-					brand = 'Fender'
-
-		if type(series) is types.ListType:
-			# Choose between series
-			if 'mia' in [x.lower() for x in series]  and 'deluxe' in [x.lower() for x in series]:
-				series = 'Deluxe'
-		else:
-			pass
-
-
-		if brand.lower() == 'epiphone' or brand.lower() == 'gibson':
-			string = brand + " " + model + " " + series
-		else:
-			string = brand + " " + series + " " + model
-
-		string = re.sub("\s+", " ", string)
-		string = re.sub("^\s|\s$", "", string)
-
-		return string
-
 	def interpretBrand(self):
 		maxScore = 0
 		maxBrands = []
