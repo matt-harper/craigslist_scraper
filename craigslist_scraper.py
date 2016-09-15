@@ -1,9 +1,7 @@
 #!/usr/bin/python
 
-import argparse
-import scraper, deal_finder, requests, identify, settings
+import scraper, deal_finder, identify, settings
 import tests.test
-from scraper import Page
 
 # Download pages from Craigslist and parse pages out into individual ads/posts
 def getPosts(pages):
@@ -71,7 +69,7 @@ def getInterestingPosts():
 if __name__ == "__main__":
 	settings.parseArgs()
 
-	if (settings.TEST):
+	if settings.TEST:
 		print "Testing..."
 		tests.test.main()
 		exit(0)
