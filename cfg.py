@@ -1,12 +1,16 @@
 import re
 
 class CFG:
-	def __init__(self, filename):
+	def __init__(self, filename, **kwargs):
 		self.name = stripFileExtension(filename)
 		self.keywords = {}
 		self.badwords = {}
 		self.requiredwords = {}
-		self.parse(filename)
+
+		if 'regex' in kwargs and kwargs['regex']:
+			self.parseRegex(filename)
+		else:
+			self.parse(filename)
 
 	def __repr__(self):
 		string = self.name + "\n"
@@ -21,6 +25,27 @@ class CFG:
 		with open(filename) as f:
 			fileData = f.read()
 
+		sections = fileData.split('[')
+
+		for section in sections[1:]:	# First split is empty
+			name = section[:section.find(']')].rstrip()	# Grab everything until the close bracket
+			section = section.replace(name + "]", "", 1)	# Remove the section name and bracket
+			words = section.split("\n")[1:]			# Split on newlines, first is empty
+			words = [word for word in words if word != ""]	# Remove blank entries
+
+			if len(words) == 0:
+				self.badwords[name] = []
+				self.requiredwords[name] = []
+				self.keywords[name] = []
+			else:
+				for word in words:
+					self.addGroupKeyword(name, word)
+
+
+	def parseRegex(self, filename):
+		fileData = ''
+		with open(filename) as openFile:
+			fileData = openFile.read()
 
 		regex = "\[(?P<group>[\w\&\!\'\- ]+)+]\n(?P<keywords>[\w\n\s.!()&\-\*\']+)"
 		for section in re.finditer(regex, fileData, flags=re.M):
@@ -31,7 +56,7 @@ class CFG:
 				self.badwords[groupName] = []
 				self.requiredwords[groupName] = []
 				self.keywords[groupName] = []
-
+		
 	def addGroupKeywords(self, groupName, keywords):
 		for keyword in keywords.split("\n"):
 			if keyword == '':

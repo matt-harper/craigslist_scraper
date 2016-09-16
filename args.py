@@ -9,5 +9,6 @@ def parseArgs():
 	argParse.add_argument('-n', '--pages', dest='PAGES', default=5, type=int, help='Download specified number of pages of Craigslist posts')
 	argParse.add_argument('-w', '--web', dest='WEB', action='store_const', const=True, default=False, help='Print post listing in HTML format')
 	argParse.add_argument('-t', '--test', dest='TEST', action='store_const', const=True, default=False, help='Execute script tests')
+	argParse.add_argument('-c', '--cfg', dest='CFG_TEST', action='store_const', const=True, default=False, help='Run cfg file loading test')
 	argParse.parse_args(namespace=settings)
 	

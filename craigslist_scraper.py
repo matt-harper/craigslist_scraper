@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 import scraper, deal_finder, identify, settings
-import tests.test
+import tests.test, tests.cfgTest
 
 # Download pages from Craigslist and parse pages out into individual ads/posts
 def getPosts(pages):
@@ -72,6 +72,11 @@ if __name__ == "__main__":
 	if settings.TEST:
 		print "Testing..."
 		tests.test.main()
+		exit(0)
+
+	if settings.CFG_TEST:
+		print "Testing cfg..."
+		tests.cfgTest.main()
 		exit(0)
 
 	interesting = getInterestingPosts()

@@ -27,6 +27,7 @@ MULTIPLE = False	# Whether or not to display posts detected as having multiple i
 UNKNOWN = False		# Whether or not to display posts that are unable to be identified
 PAGES = 5		# Number of Craigslist pages to scrape
 TEST = False		# Flag to execute identification tests
+CFG_TEST = False	# Flag to execute cfg file loading test
 #################################################################################
 #	End global variables							#
 #################################################################################
