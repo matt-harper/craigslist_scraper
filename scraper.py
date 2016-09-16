@@ -3,8 +3,8 @@ import requests, random, cl_post, settings
 
 class Scraper():
 	def __init__(self):
-		self.loadUserAgents()
 		self.agents = []
+		self.loadUserAgents()
 
 	def downloadPage(self, pageNumber=0):
 		url = settings.MUSIC_URL
