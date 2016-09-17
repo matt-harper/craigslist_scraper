@@ -10,7 +10,12 @@ class Scraper():
 		url = settings.MUSIC_URL
 		if pageNumber > 0:
 			url += '?s=' + str(int(100 * pageNumber))
-		return Page(requests.get(url, headers=self.generateHeaders()))
+
+                try:
+        		return Page(requests.get(url, headers=self.generateHeaders()))
+                except ValueError as e:
+                        print "Error downloading page:" + str(e)
+                        exit(-1)
 
 	def generateHeaders(self):
 		return self.generateUserAgentHeader()
@@ -22,7 +27,7 @@ class Scraper():
 	def loadUserAgents(self):
 		with open(settings.AGENTS_PATH) as f:
 			for agent in f:
-				agent.rstrip()
+				agent = agent.rstrip()
 				self.agents.append(agent)
 
 	def getRandomAgent(self):
