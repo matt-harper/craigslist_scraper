@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import scraper, deal_finder, identify, settings
+import scraper, adFilter, identify, settings
 import tests.test, tests.cfgTest
 
 # Download pages from Craigslist and parse pages out into individual ads/posts
@@ -53,16 +53,10 @@ def display(idPostGroup):
 			print post
 		print "\n"
 
-def filterPosts(posts):
-	dealFinder = deal_finder.DealFinder()
-
-	interestingPosts = dealFinder.getPotentiallyInteresting(posts)
-
-	return interestingPosts
 
 def getInterestingPosts():
 	posts = getPosts(settings.PAGES)
-	interesting = filterPosts(posts)
+	interesting = adFilter.filterUninteresting(posts)
 
 	return interesting
 
