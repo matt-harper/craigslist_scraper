@@ -53,12 +53,13 @@ class Page():
 
 		for row in self.getRowsClass():
 			try:
+				postID = self.getPostID(row)
 				title = self.getTitle(row)
 				url   = self.getUrl(row)
 				price = self.getPrice(row)
 				images= self.getImageURLs(row)
 
-				post = cl_post.Post(title, url, price)
+				post = cl_post.Post(postID, title, url, price)
 				post.images = images
 
 				itemsForSale.append(post)
@@ -67,6 +68,9 @@ class Page():
 				continue
 
 		return itemsForSale
+
+	def getPostID(self, row):
+		return row.get('data-pid')
 
 	def getUrl(self, row):
 		urlExtension = row.find_class("hdrlnk")[0].get('href')
