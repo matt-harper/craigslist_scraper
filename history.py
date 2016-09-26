@@ -54,6 +54,9 @@ class Database():
 		else:
 			return False
 
+	def createGuitarTable(self):
+		self.createTable(GUITAR_TABLE, getGuitarTableValues())
+
 
 def getGuitarTableValues():
 	values = [	'postID INTEGER',
