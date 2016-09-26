@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import scraper, adFilter, identify, settings
+import scraper, adFilter, identify, settings, history
 import tests.test, tests.cfgTest
 
 # Download pages from Craigslist and parse pages out into individual ads/posts
@@ -28,6 +28,7 @@ def idPosts(posts):
 			unknown.append(post)
 		else:
 			identified[post] = identity
+			post.identity = identity
 
 	return (identified, multiple, unknown)
 
@@ -62,6 +63,8 @@ def getInterestingPosts():
 
 if __name__ == "__main__":
 	settings.parseArgs()
+	historyDB = history.Database(history.DB_FILE)
+	historyDB.createTable(history.GUITAR_TABLE, history.getGuitarTableValues())
 
 	if settings.TEST:
 		print "Testing..."
@@ -74,6 +77,13 @@ if __name__ == "__main__":
 		exit(0)
 
 	interesting = getInterestingPosts()
+	(identified, multiple, unknown) = idPosts(interesting)
 
-	display(idPosts(interesting))
+	for post in identified.keys():
+		identity = identified[post]
+		historyDB.addGuitar(post)
+
+	historyDB.commit()
+
+	display((identified, multiple, unknown))
 

@@ -1,21 +1,67 @@
 import sqlite3
 
-def openDatabase(filename):
-        dbHandle = sqlite3.connect(filename)
-        return dbHandle
+DB_FILE = 'guitar_history.db'
+GUITAR_TABLE = 'guitars'
 
-def createGuitarTable(db, tableName):
-        stmt = 'CREATE TABLE IF NOT EXISTS ' + tableName + ' (postID INTERGER, postTitle STRING, identity STRING, price INTEGER);'
-        db.execute(stmt)
+class Database():
+	def __init__(self, filename):
+		self.db = self.open(filename)
 
-def insertGibberish(db, tableName, **kwargs):
-        numRows = 10
-        if 'rows' in kwargs:
-                numRows = kwargs['rows']
+	def __del__(self):
+		self.close()
 
-        for i in range(numRows):
-                stmt = genInsert(tableName, str(i), "Example title " + str(i), "Guitar " +  str(i), 0)
-                db.execute(stmt)
+	def commit(self):
+		self.db.commit()
+
+	def open(self, filename):
+		return sqlite3.connect(filename)
+
+	def close(self):
+		self.db.close()
+
+	def execute(self, statement):
+		self.query(statement)
+
+	def query(self, statement):
+		return self.db.execute(statement)
+
+	def createTable(self, tableName, values):
+		stmt = 'CREATE TABLE IF NOT EXISTS ' + tableName + ' ('
+		for i, value in enumerate(values):
+			if i + 1 != len(values):
+				stmt += value + ', '
+			else:
+				stmt += value + ');'
+
+		self.execute(stmt)
+
+	def dumpTable(self, tableName):
+		query = 'select * from ' + tableName
+		results = self.query(query)
+		for result in results:
+			print result
+
+	def addGuitar(self, post):
+		stmt = genInsert(GUITAR_TABLE, post.postID, post.title, post.identity, post.price)
+		if not self.postExistsInDB(post):
+			self.execute(stmt)
+
+	def postExistsInDB(self, post):
+		query = 'select * from ' + GUITAR_TABLE + ' where postID = ' + str(post.postID) + ';'
+		results = self.query(query)
+		if len(results.fetchall()) > 0:
+			return True
+		else:
+			return False
+
+
+def getGuitarTableValues():
+	values = [	'postID INTEGER',
+			'postTitle STRING',
+			'identity STRING',
+			'price INTEGER'
+		 ]
+	return values
 
 def loadTestData(filename):
         fileData = ''
@@ -30,29 +76,8 @@ def loadTestData(filename):
                         (title, identity) = line.split(' : ')
                 except ValueError:
                         print "Test data file error line: " + line
-                print title + 'XXX\t' + identity + 'XXX'
 
 def genInsert(tableName, postID, postTitle, identity, price):
-        return "INSERT INTO " + tableName + " VALUES ( " + str(postID) + ", '" + postTitle + "', '" + identity + "', " + str(price) + ");"
+        return "INSERT INTO " + tableName + " VALUES ( " + str(postID) + ", \"" + postTitle + "\", \"" + identity + "\", " + str(price) + ");"
              
-def dumpTable(db, tableName):
-        query = 'SELECT * FROM ' + tableName + ';'
-        cursor = db.execute(query)
 
-        rows = []
-        for row in cursor:
-                rows.append(row)
-
-        return rows
-
-DB_FILE = 'guitar_history.db'
-
-loadTestData('tests/testData.txt')
-
-#connection = openDatabase(DB_FILE)
-#createGuitarTable(connection, 'test_table')
-#insertGibberish(connection, 'test_table')
-#print dumpTable(connection, 'test_table')
-
-#connection.commit()
-#connection.close()
