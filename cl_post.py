@@ -1,11 +1,17 @@
 
 class Post():
-	def __init__(self, title, url, price):
-		self.printHTML = False
-		self.images = None
+	def __init__(self, postID, title, url, price):
+		self.postID = postID
 		self.title = title.encode('utf-8')
 		self.name = title.lower().encode('utf-8')
 		self.url = url
+		self.setPrice(price)
+
+		self.printHTML = False
+		self.images = None
+
+
+	def setPrice(self, price):
 		if price == 'N/A':
 			self.price = 0
 		else:
