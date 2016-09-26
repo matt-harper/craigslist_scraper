@@ -1,5 +1,5 @@
 import sys, datetime
-import settings, craigslist_scraper
+import settings, craigslist_scraper, history
 
 
 def writeHeader(file):
@@ -60,11 +60,21 @@ def writeSection(file, title, sectionPosts):
 
 	file.write('\t</ul><br>\n')
 
+def writeHistory(identified):
+	db = history.Database(history.DB_FILE)
+	db.createGuitarTable()
+
+	for post in identified.keys():
+		db.addGuitar(post)
+
+	db.commit()
+
 def writeFile(file, data):
 	file.truncate()
 	(identified, multiple, unknown) = data
 
 	writeHeader(file)
+	writeHistory(identified)
 
 	if not settings.IDENTIFIED:
 		writeSection(file, settings.ID_STRING, identified)
