@@ -23,7 +23,10 @@ class Database():
 		self.query(statement)
 
 	def query(self, statement):
-		return self.db.execute(statement)
+		try:
+			return self.db.execute(statement)
+		except sqlite3.OperationalError:
+			print "Error using query: " + statement
 
 	def createTable(self, tableName, values):
 		stmt = 'CREATE TABLE IF NOT EXISTS ' + tableName + ' ('
