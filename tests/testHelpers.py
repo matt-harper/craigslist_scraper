@@ -29,7 +29,7 @@ def getTestData():
 	return parseTestData(lines)
 
 def identify(id, ad):
-	post = cl_post.Post(ad, "", 0)
+	post = cl_post.Post(0, ad, "", 0)
 	return id.identify(post)
 
 def summarizeResults(testResults):
