@@ -84,6 +84,7 @@ def loadTestData(filename):
                         print "Test data file error line: " + line
 
 def genInsert(tableName, postID, postTitle, identity, price):
+	postTitle = postTitle.replace("\"", "")
         return "INSERT INTO " + tableName + " VALUES ( " + str(postID) + ", \"" + postTitle + "\", \"" + identity + "\", " + str(price) + ");"
              
 
