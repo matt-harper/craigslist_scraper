@@ -90,7 +90,8 @@ class Page():
 	def getImageURLs(self, row):
 		imgs = []
 		try:
-			imgsElement = row.find_class('i gallery')[0]
+			#imgsElement = row.find_class('i gallery')[0]
+			imgsElement = row.find_class('result-image gallery')[0]
 			imgsAttrib = imgsElement.get('data-ids')
 			if imgsAttrib is None:
 				return imgs
