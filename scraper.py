@@ -53,13 +53,14 @@ class Page():
 
 		for row in self.getRowsClass():
 			try:
-				postID = self.getPostID(row)
+				postID= self.getPostID(row)
 				title = self.getTitle(row)
 				url   = self.getUrl(row)
 				price = self.getPrice(row)
 				images= self.getImageURLs(row)
+				date  = self.getDate(row)
 
-				post = cl_post.Post(postID, title, url, price)
+				post = cl_post.Post(postID, title, url, price, date)
 				post.images = images
 
 				itemsForSale.append(post)
@@ -82,10 +83,16 @@ class Page():
 
 	def getPrice(self, row):
 		try:
-			price = row.find_class('price')[0].text
+			#price = row.find_class('price')[0].text
+			price = row.find_class('result-price')[0].text
 			return price.replace('$', '')
 		except:
 			return 'N/A'
+
+	def getDate(self, row):
+		timeClass = row.find_class("result-date")[0]
+		datetime = timeClass.get('datetime')
+		return datetime
 
 	def getImageURLs(self, row):
 		imgs = []
