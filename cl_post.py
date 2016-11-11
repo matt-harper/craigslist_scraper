@@ -1,15 +1,22 @@
 
 class Post():
-	def __init__(self, postID, title, url, price):
+	def __init__(self, postID, title, url, price, datetime):
 		self.postID = postID
 		self.title = title.encode('utf-8')
 		self.name = title.lower().encode('utf-8')
 		self.url = url
+		self.datetime = datetime
 		self.setPrice(price)
 
 		self.printHTML = False
 		self.images = None
+		self.identity = None
 
+	def getRegion(self):
+		if (self.url == ''):
+			return ''
+
+		return self.url[0:self.url.find(".craigslist")].replace("https://","")
 
 	def setPrice(self, price):
 		if price == 'N/A':

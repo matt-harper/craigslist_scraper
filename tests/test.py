@@ -9,6 +9,14 @@ def main():
 
 	for adText in testData.keys():
 		answer = testHelpers.identify(id, adText)
+		if answer is None:
+			answer = 'More than 1 possible'
+		elif answer == '':
+			pass
+		else:
+			(brand, model, series) = answer
+			answer = (brand + " " + model + " " + series).rstrip()
+
 		testResult = testData[adText] == answer
 		testResults[adText] = (testResult, answer)
 		

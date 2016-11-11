@@ -22,12 +22,22 @@ def idPosts(posts):
 	for post in posts:
 		identity = id.identify(post)
 
-		if identity == 'Multiple':
+#		if identity == 'Multiple':
+#			multiple.append(post)
+#		elif identity == '':
+#			unknown.append(post)
+#		else:
+#			identified[post] = identity
+#			post.identity = identity
+
+		if identity is None:
 			multiple.append(post)
 		elif identity == '':
 			unknown.append(post)
 		else:
-			identified[post] = identity
+			(brand, model, series) = identity
+			idString = (brand + " "  + model + " " + series).rstrip()
+			identified[post] = idString
 			post.identity = identity
 
 	return (identified, multiple, unknown)
@@ -65,6 +75,11 @@ if __name__ == "__main__":
 	settings.parseArgs()
 	historyDB = history.Database(history.DB_FILE)
 	historyDB.createTable(history.GUITAR_TABLE, history.getGuitarTableValues())
+	historyDB.createTable(history.HISTORY_TABLE, history.getHistoryTableValues())
+	historyDB.createTable(history.IDENTITY_TABLE, history.getIdentityTableValues())
+	historyDB.createTable(history.URL_TABLE, history.getURLTableValues())
+	historyDB.createTable(history.IMAGE_TABLE, history.getImageTableValues())
+	historyDB.createTable(history.DELETED_TABLE, history.getDeletedTableValues())
 
 	if settings.TEST:
 		print "Testing..."
@@ -82,6 +97,8 @@ if __name__ == "__main__":
 	for post in identified.keys():
 		identity = identified[post]
 		historyDB.addGuitar(post)
+		historyDB.insertPost(post)
+
 
 	historyDB.commit()
 

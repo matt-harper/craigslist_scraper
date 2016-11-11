@@ -26,7 +26,8 @@ class Identifier:
 		for series in self.getPotentialSeries(clItem):
 			identity.addSeries(series)
 
-		return identity.interpret(self.mc)
+		id = identity.interpret(self.mc)
+		return id
 
 	# Get a list of brands that an item could potentially be
 	def getPotentialBrands(self, clItem):
@@ -173,7 +174,8 @@ class Identity:
 
 		if len(possibleIDs) == 1:
 			(brand, model, series) = possibleIDs[0]
-			return (brand + " " + model + " " + series).rstrip()
+			return (brand, model, series)
+			#return (brand + " " + model + " " + series).rstrip()
 		elif len(possibleIDs) > 1:
 			# Throw out any IDs that don't have a full brand/model/series
 			completeIDs = []
@@ -184,9 +186,11 @@ class Identity:
 
 			if len(completeIDs) == 1:
 				(brand, model, series) = completeIDs[0]
-				return (brand + " " + model + " " + series).rstrip()
+				return (brand, model, series)
+				#return (brand + " " + model + " " + series).rstrip()
 			else:
-				return "More than 1 possible"
+				return None
+				#return "More than 1 possible"
 		else:
 			return ""
 

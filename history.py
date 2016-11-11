@@ -1,7 +1,12 @@
 import sqlite3
 
-DB_FILE = 'guitar_history.db'
+DB_FILE = '/var/www/guitar_history.db'
 GUITAR_TABLE = 'guitars'
+HISTORY_TABLE = 'guitars_history'
+IDENTITY_TABLE = 'identities'
+URL_TABLE = 'urls'
+IMAGE_TABLE = 'images'
+DELETED_TABLE = 'deleted'
 
 class Database():
 	def __init__(self, filename):
@@ -45,9 +50,36 @@ class Database():
 			print result
 
 	def addGuitar(self, post):
+		return
 		stmt = genInsert(GUITAR_TABLE, post.postID, post.title, post.identity, post.price)
 		if not self.postExistsInDB(post):
 			self.execute(stmt)
+
+	def insertPost(self, post):
+		# Add the post metadata to the history table
+		cmd = generateHistoryInsert(post)
+		try:
+			self.execute(cmd)
+		except sqlite3.IntegrityError:
+			return	
+
+		cmd = generateURLInsert(post)
+		try:
+			self.execute(cmd)
+		except sqlite3.IntegrityError:
+			pass
+
+		for cmd in generateImageInsert(post):
+			self.execute(cmd)
+
+		# Add the identity of the post to the indentity table
+		if post.identity is None or post.identity == '':
+			return
+		cmd = generateIdentityInsert(post)
+		try:
+			self.execute(cmd)
+		except sqlite3.IntegrityError:
+			pass
 
 	def postExistsInDB(self, post):
 		query = 'select * from ' + GUITAR_TABLE + ' where postID = ' + str(post.postID) + ';'
@@ -65,7 +97,41 @@ def getGuitarTableValues():
 	values = [	'postID INTEGER',
 			'postTitle STRING',
 			'identity STRING',
-			'price INTEGER'
+			'price INTEGER',
+		 ]
+	return values
+
+def getHistoryTableValues():
+	values = [	'region STRING',
+			'postID INTEGER UNIQUE',
+			'date STRING',
+			'postTitle STRING',
+			'price INTEGER',
+		 ]
+	return values
+
+def getIdentityTableValues():
+	values = [	'postID INTEGER UNIQUE',
+			'brand STRING',
+			'model STRING',
+			'series STRING',
+		 ]
+	return values
+
+def getURLTableValues():
+	values = [	'postID INTEGER UNIQUE',
+			'url STRING',
+		 ]
+	return values
+
+def getImageTableValues():
+	values = [	'postID INTEGER',
+			'url STRING',
+		 ]
+	return values
+
+def getDeletedTableValues():
+	values = [	'postID INTEGER UNIQUE',
 		 ]
 	return values
 
@@ -87,4 +153,35 @@ def genInsert(tableName, postID, postTitle, identity, price):
 	postTitle = postTitle.replace("\"", "")
         return "INSERT INTO " + tableName + " VALUES ( " + str(postID) + ", \"" + postTitle + "\", \"" + identity + "\", " + str(price) + ");"
              
+def generateHistoryInsert(post):
+	region = post.getRegion()
+	postID = post.postID
+	date   = post.datetime
+	title  = post.title.replace("'","").replace("\"","")
+	price  = post.price
+
+	return "INSERT INTO " + HISTORY_TABLE + " VALUES ( '" + region + "', " + str(postID) + ", '" + date + "', '" + title + "', " + str(price) + ");"
+
+def generateIdentityInsert(post):
+	postID = post.postID
+	(brand, model, series) = post.identity
+
+	return "INSERT INTO " + IDENTITY_TABLE + " VALUES ( " + str(postID) + ", '" + brand + "', '" + model + "', '" + series + "');"
+
+def generateURLInsert(post):
+	postID = post.postID
+	url    = post.url
+
+	return "INSERT INTO " + URL_TABLE + " VALUES ( " + str(postID) + ", '" + url + "');"
+
+def generateImageInsert(post):
+	postID = post.postID
+	images = post.images
+
+	inserts = []
+	for image in images:
+		query = "INSERT INTO " + IMAGE_TABLE + " VALUES ( " + str(postID) + ",'" + image + "');"
+		inserts.append(query)
+
+	return inserts
 
